@@ -28,6 +28,7 @@ export default function StudentPage() {
   const [courseNo, setCourseNo] = useState("");
   const router = useRouter();
 
+  //get token and authenusername from global store
   const { token, authenUsername } = useStore($authenStore);
 
   const loadMyCourses = async () => {
@@ -107,7 +108,7 @@ export default function StudentPage() {
     <Stack>
       <Paper withBorder p="md">
         <Group>
-          <Title order={4}>Hi,</Title>
+          <Title order={4}>Hi, {authenUsername}</Title>
           <Button color="red" onClick={logout}>
             Logout
           </Button>
@@ -117,16 +118,16 @@ export default function StudentPage() {
         <Title order={4}>My Course(s)</Title>
 
         {myEnrollments &&
-          myEnrollments.map((course: Course) => (
-            <Group my="xs" key={course.courseNo}>
+          myEnrollments.map((enroll: any) => (
+            <Group my="xs" key={enroll.courseNo}>
               <Text>
-                {course.courseNo} - {course.title}
+                {enroll.courseNo} - {enroll.course.title}
               </Text>
               <Button
                 color="red"
                 size="xs"
-                onClick={() => callDropApi(course.courseNo)}
-                loading={course.courseNo === loadingDropping}
+                onClick={() => callDropApi(enroll.courseNo)}
+                loading={enroll.courseNo === loadingDropping}
               >
                 Drop
               </Button>

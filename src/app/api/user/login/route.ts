@@ -4,14 +4,22 @@ import sleep from "sleep-promise";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
+import { getPrisma } from "@lib/getPrisma";
+
 export const POST = async (request: NextRequest) => {
   const body = await request.json();
   const { username, password } = body;
 
-  // Get user from "real database"
-  const user = null;
+  const prisma = getPrisma();
 
-  if (!user) {
+  // Get user from "real database"
+  // return a User object or null if not found
+  const user = await prisma.user.findFirst({ 
+    where: {username: username}
+  });
+
+  //if user not found or password is incorrect
+  if (!user || bcrypt.compareSync(user.password, password)) { //ของอาจารย์user.password กับ password สลับที่กันไม่รู้ทำไม
     return NextResponse.json(
       {
         ok: false,
